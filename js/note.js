@@ -1,15 +1,16 @@
 class Note {
-  constructor(ctx, freq, dur) {
-    this.ctx = ctx;
-    this.osc = this.ctx.createOscillator();
-    this.osc.frequency.value = freq;
-    this.osc.connect(this.ctx.destination);
-    this.dur = dur
+  constructor(ctx, freq) {
+    this.ctx = ctx
+    this.freq = freq
+    this.trigger()
   }
 
   trigger() {
-    this.osc.start();
-    setTimeout(() => this.osc.stop(0), this.dur);
+    let osc = this.ctx.createOscillator();
+    osc.frequency.value = this.freq;
+    osc.connect(this.ctx.destination);
+    osc.start();
+    setTimeout(() => osc.stop(0), 50);
   }
 };
 

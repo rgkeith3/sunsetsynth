@@ -6,6 +6,12 @@ class Phrase {
   record(time, note) {
     this.notes[time] = note;
   }
+
+  play(time) {
+    if (this.notes[time]) {
+      this.notes[time].trigger();
+    }
+  }
 }
 
 module.exports = Phrase;
