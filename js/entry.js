@@ -41,7 +41,7 @@ class Looper {
 
   clock() {
     if (this.recording) {
-      let note = new Note(this.audCtx, this.yPos);
+      let note = new Note(this.audCtx, this.yPos, this.xPos);
       this.phrase.record(this.count, note)
     }
     this.loops.forEach(loop => {
