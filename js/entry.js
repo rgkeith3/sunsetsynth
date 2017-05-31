@@ -1,5 +1,3 @@
-const Phrase = require("./phrase")
-const Note = require("./note")
 const Loop = require("./loop")
 const Synthesizer = require("./synthesizer")
 
@@ -12,14 +10,13 @@ class Looper {
     this.canvas.addEventListener('mouseup', this.handleLeave.bind(this));
     this.canvas.addEventListener('mouseleave', this.handleLeave.bind(this));
     this.setup();
-    this.recording = false;
     this.count = 0;
     this.loops = [];
     setInterval(this.clock.bind(this), 50);
   }
 
   handleLeave(e) {
-    if (this.recording) {
+    if (this.rec.state === 'recording') {
       this.stopRecord()
     }
   }
@@ -58,15 +55,21 @@ class Looper {
     this.loop = new Loop(this.count, this.loopCtx);
     this.chunks = [];
 
-    this.recording = true;
+    if (this.rec.state === 'inactive') {
+      this.rec.start();
+    }
+
     this.synth.startSynth()
-    this.rec.start();
   }
 
   stopRecord(e) {
-    this.rec.stop();
-    this.synth.stopSynth()
     this.recording = false
+    this.synth.stopSynth()
+    setTimeout(() => {
+      if (this.rec.state === 'recording') {
+        this.rec.stop()
+      }
+    }, 1000)
   }
 
   playLoops(count) {

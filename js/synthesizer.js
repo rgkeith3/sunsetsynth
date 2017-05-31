@@ -1,10 +1,23 @@
 class Synthesizer {
   constructor(canvas, looperDest, context) {
     this.canvas = canvas;
-    this.canvas.addEventListener('mousemove', this.trackMouse.bind(this));
     this.looperDest = looperDest;
-    this.audCtx = context
+    this.audCtx = context;
+    this.setupGain();
+    this.setupNodes();
+    this.canvas.addEventListener('mousemove', this.trackMouse.bind(this));
     this.osc = this.audCtx.createOscillator();
+  }
+
+  setupGain() {
+    this.gainNode = this.audCtx.createGain();
+    this.gainNode.gain.value = 0;
+  }
+
+  setupNodes() {
+    this.filterNode = this.audCtx.createBiquadFilter();
+    this.filterNode.type = 'lowpass';
+    this.filterNode.Q.value = 25;
   }
 
   trackMouse(e) {
@@ -15,23 +28,45 @@ class Synthesizer {
   }
 
   updateY() {
-    this.osc.frequency.value = this.yPos;
+    const PITCHES  = [110,
+                      130.81,
+                      146.83,
+                      164.81,
+                      196,
+                      220,
+                      261.63,
+                      293.66,
+                      329.63,
+                      392,
+                      440,
+                      523.25,
+                      587.33,
+                      659.25,
+                      783.99,
+                      880];
+    let step = Math.floor(((this.yPos / this.canvas.height) * PITCHES.length) - 2);
+    this.osc.frequency.value = PITCHES[step];
   }
 
   updateX() {
-    console.log(this.xPos);
+    this.filterNode.frequency.value = this.xPos * 4;
   }
 
   startSynth() {
     this.osc = this.audCtx.createOscillator();
+    this.osc.type = 'sawtooth'
     this.osc.frequency.value = this.yPos;
-    this.osc.connect(this.audCtx.destination);
-    this.osc.connect(this.looperDest);
+    this.osc.connect(this.filterNode);
+    this.filterNode.connect(this.gainNode);
+    this.gainNode.connect(this.audCtx.destination);
+    this.gainNode.connect(this.looperDest);
+    this.gainNode.gain.linearRampToValueAtTime(0.5, this.audCtx.currentTime + 0.1);
     this.osc.start();
   }
 
   stopSynth() {
-    this.osc.stop();
+    this.gainNode.gain.linearRampToValueAtTime(0, this.audCtx.currentTime + 0.25);
+    this.osc.stop(this.audCtx.currentTime + 0.25);
   }
 }
 
