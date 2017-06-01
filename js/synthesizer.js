@@ -1,12 +1,14 @@
 class Synthesizer {
-  constructor(canvas, looperDest, context) {
+  constructor(canvas, looperDest, context, analyser) {
     this.canvas = canvas;
     this.looperDest = looperDest;
     this.audCtx = context;
+    this.analyser = analyser;
     this.setupGain();
     this.setupNodes();
     this.canvas.addEventListener('mousemove', this.trackMouse.bind(this));
     this.osc = this.audCtx.createOscillator();
+    this.playing = false;
   }
 
   setupGain() {
@@ -17,14 +19,16 @@ class Synthesizer {
   setupNodes() {
     this.filterNode = this.audCtx.createBiquadFilter();
     this.filterNode.type = 'lowpass';
-    this.filterNode.Q.value = 25;
+    this.filterNode.Q.value = 15;
   }
 
   trackMouse(e) {
     this.xPos = e.clientX;
     this.yPos = e.clientY;
-    this.updateY();
-    this.updateX();
+    if (this.playing) {
+      this.updateY();
+      this.updateX();
+    }
   }
 
   updateY() {
@@ -54,17 +58,19 @@ class Synthesizer {
 
   startSynth() {
     this.osc = this.audCtx.createOscillator();
-    this.osc.type = 'sawtooth'
+    this.osc.type = 'square'
     this.osc.frequency.value = this.yPos;
     this.osc.connect(this.filterNode);
     this.filterNode.connect(this.gainNode);
     this.gainNode.connect(this.audCtx.destination);
     this.gainNode.connect(this.looperDest);
     this.gainNode.gain.linearRampToValueAtTime(0.5, this.audCtx.currentTime + 0.1);
+    this.playing = true;
     this.osc.start();
   }
 
   stopSynth() {
+    this.playing = false;
     this.gainNode.gain.linearRampToValueAtTime(0, this.audCtx.currentTime + 0.25);
     this.osc.stop(this.audCtx.currentTime + 0.25);
   }

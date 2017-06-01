@@ -1,12 +1,13 @@
 const Loop = require("./loop")
 const Synthesizer = require("./synthesizer")
+const Visualizer = require("./visualizer")
 
 class Looper {
   constructor(canvas) {
     this.canvas = canvas;
-    this.vizCtx = this.canvas.getContext('2d');
+    this.visualizer = new Visualizer(this.canvas);
     this.loopCtx = new AudioContext();
-    this.canvas.addEventListener('mousedown', this.startRecord.bind(this));
+    this.canvas.addEventListener('mousedown', this.handleDown.bind(this));
     this.canvas.addEventListener('mouseup', this.handleLeave.bind(this));
     this.canvas.addEventListener('mouseleave', this.handleLeave.bind(this));
     this.setup();
@@ -18,6 +19,14 @@ class Looper {
   handleLeave(e) {
     if (this.rec.state === 'recording') {
       this.stopRecord()
+    }
+  }
+
+  handleDown(e) {
+    if (e.button === 0) {
+      this.startRecord()
+    } else if (e.button === 2) {
+      this.loops.pop
     }
   }
 
@@ -50,7 +59,7 @@ class Looper {
     }
   }
 
-  startRecord(e) {
+  startRecord() {
     //declare variables for recording loop
     this.loop = new Loop(this.count, this.loopCtx);
     this.chunks = [];
@@ -87,6 +96,7 @@ class Looper {
       this.count = 0;
     }
     this.playLoops(this.count)
+    this.visualizer.draw();
   }
 }
 

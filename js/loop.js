@@ -1,7 +1,10 @@
 class Loop {
-  constructor(count, ctx) {
+  constructor(count, audCtx) {
     this.count = count;
-    this.ctx = ctx;
+    this.audCtx = audCtx;
+
+    this.analyser = this.audCtx.createAnalyser();
+
     this.buffer;
     this.source;
     this.playing = false;
@@ -9,15 +12,25 @@ class Loop {
 
   trigger() {
     if (!this.playing) {
-      this.source = this.ctx.createBufferSource();
+      this.source = this.audCtx.createBufferSource();
       this.source.buffer = this.buffer;
-      this.source.onended = (e) => {
-        this.playing = false;
-        this.source = null;
-      }
-      this.source.connect(this.ctx.destination)
-      this.source.start()
+      this.source.onended = this.stopPlay.bind(this);
+      this.source.connect(this.analyser);
+      this.analyser.connect(this.audCtx.destination);
+      this.playing = true
+      this.source.start();
     }
+  }
+
+  stopPlay() {
+    this.playing = false;
+  }
+
+  getAnalyserData() {
+    let bufferLength = this.analyser.frequencyBinCount;
+    let dataArray = new Uint8Array(bufferLength);
+    this.analyser.getByteFrequencyData(dataArray);
+    return dataArray;
   }
 }
 
