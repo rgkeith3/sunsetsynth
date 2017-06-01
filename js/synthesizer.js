@@ -24,7 +24,7 @@ class Synthesizer {
 
   trackMouse(e) {
     this.xPos = e.clientX;
-    this.yPos = e.clientY;
+    this.yPos = this.canvas.height - e.clientY;
     if (this.playing) {
       this.updateY();
       this.updateX();

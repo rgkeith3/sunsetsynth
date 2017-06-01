@@ -29,8 +29,9 @@ class Looper {
   handleDown(e) {
     if (e.button === 0) {
       this.startRecord()
-    } else if (e.button === 2) {
-      this.loops.pop
+    } else if (e.button === 2){
+      this.loops.pop(1);
+      this.visualizer.orbs.pop(1);
     }
   }
 
