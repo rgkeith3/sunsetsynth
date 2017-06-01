@@ -5,8 +5,12 @@ const Visualizer = require("./visualizer")
 class Looper {
   constructor(canvas) {
     this.canvas = canvas;
-    this.visualizer = new Visualizer(this.canvas);
     this.loopCtx = new AudioContext();
+    this.analyser = this.loopCtx.createAnalyser();
+    this.analyser.fftsize = 256;
+    this.analyser.connect(this.loopCtx.destination);
+
+    this.visualizer = new Visualizer(this.canvas, this.analyser);
     this.canvas.addEventListener('mousedown', this.handleDown.bind(this));
     this.canvas.addEventListener('mouseup', this.handleLeave.bind(this));
     this.canvas.addEventListener('mouseleave', this.handleLeave.bind(this));
@@ -35,7 +39,7 @@ class Looper {
     this.recDest = this.loopCtx.createMediaStreamDestination();
     this.rec = new MediaRecorder(this.recDest.stream);
 
-    this.synth = new Synthesizer(this.canvas, this.recDest, this.loopCtx);
+    this.synth = new Synthesizer(this.canvas, this.recDest, this.loopCtx, this.analyser);
 
     //set callbacks for when the recorder is finished
     //to pass the recorded data to chunks Array
@@ -51,9 +55,7 @@ class Looper {
           .then(data => this.loop.buffer = data)
           //which is pushed into the loops object
           .then(() => this.loops.push(this.loop))
-          //then things are reset to be garbage collected
-          .then(() => this.recDest = null)
-          .then(() => console.log(this.loops))
+          .then(() => this.visualizer.createOrb())
       }
       fileReader.readAsArrayBuffer(blob)
     }
@@ -61,7 +63,7 @@ class Looper {
 
   startRecord() {
     //declare variables for recording loop
-    this.loop = new Loop(this.count, this.loopCtx);
+    this.loop = new Loop(this.count, this.loopCtx, this.analyser);
     this.chunks = [];
 
     if (this.rec.state === 'inactive') {

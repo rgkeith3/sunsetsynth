@@ -1,10 +1,8 @@
 class Loop {
-  constructor(count, audCtx) {
+  constructor(count, audCtx, analyser) {
     this.count = count;
     this.audCtx = audCtx;
-
-    this.analyser = this.audCtx.createAnalyser();
-
+    this.analyser = analyser;
     this.buffer;
     this.source;
     this.playing = false;
@@ -16,7 +14,6 @@ class Loop {
       this.source.buffer = this.buffer;
       this.source.onended = this.stopPlay.bind(this);
       this.source.connect(this.analyser);
-      this.analyser.connect(this.audCtx.destination);
       this.playing = true
       this.source.start();
     }

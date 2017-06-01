@@ -19,7 +19,7 @@ class Synthesizer {
   setupNodes() {
     this.filterNode = this.audCtx.createBiquadFilter();
     this.filterNode.type = 'lowpass';
-    this.filterNode.Q.value = 15;
+    this.filterNode.Q.value = 25;
   }
 
   trackMouse(e) {
@@ -53,16 +53,16 @@ class Synthesizer {
   }
 
   updateX() {
-    this.filterNode.frequency.value = this.xPos * 4;
+    this.filterNode.frequency.value = this.xPos * 10;
   }
 
   startSynth() {
     this.osc = this.audCtx.createOscillator();
-    this.osc.type = 'square'
+    this.osc.type = 'sawtooth'
     this.osc.frequency.value = this.yPos;
     this.osc.connect(this.filterNode);
     this.filterNode.connect(this.gainNode);
-    this.gainNode.connect(this.audCtx.destination);
+    this.gainNode.connect(this.analyser);
     this.gainNode.connect(this.looperDest);
     this.gainNode.gain.linearRampToValueAtTime(0.5, this.audCtx.currentTime + 0.1);
     this.playing = true;
