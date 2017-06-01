@@ -98,6 +98,11 @@ class Looper {
     } else {
       this.count = 0;
     }
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    this.canvas.width = width;
+    this.canvas.height = height;
+
     this.playLoops(this.count)
     this.visualizer.draw();
   }

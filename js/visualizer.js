@@ -6,6 +6,7 @@ class Visualizer {
     this.visualCtx = this.canvas.getContext('2d');
     this.loopAnalyser = analyser;
     this.orbs = [];
+    this.sunset = this.canvas.height / 4;
   }
 
   createOrb() {
@@ -65,7 +66,7 @@ class Visualizer {
     for (var i = 0; i < dataArray.length; i += 1) {
       barHeight = (this.canvas.height / 2) * (dataArray[i] / 256);
 
-      this.visualCtx.fillStyle = `rgba(256,256,0, ${barHeight / 256} )`;
+      this.visualCtx.fillStyle = `rgba(256,128,0, ${barHeight / 256} )`;
       this.visualCtx.fillRect(x, (this.canvas.height / 2) - barHeight, barWidth, barHeight);
       this.visualCtx.fillRect(x2, (this.canvas.height / 2) - barHeight, barWidth, barHeight);
 
@@ -84,18 +85,30 @@ class Visualizer {
 
     let background = this.visualCtx.createLinearGradient(this.canvas.width / 2, 0,
                                                          this.canvas.width / 2, this.canvas.height / 2);
+    let red = this.sunset < this.canvas.height / 4 ? 256: Math.floor(256 - (this.sunset - (this.canvas.height / 4)));
+    let blue = (red < 0) ? Math.floor(this.sunset - ((this.canvas.height / 4) + 256)) : 0
+
     background.addColorStop(0, 'black');
-    background.addColorStop(1, 'rgb(100, 0,0)');
+    background.addColorStop(1, `rgb(${red} ,0, ${blue} )`);
     this.visualCtx.fillStyle = background;
     this.visualCtx.fillRect(0,0,this.canvas.width, this.canvas.height / 2)
+
+    this.topBars(dataArray)
+
+    let sunRadius = this.canvas.width / 20 + (dataArray[128] / 3);
+    this.visualCtx.beginPath();
+    this.visualCtx.arc(this.canvas.width / 2, this.canvas.height / 4 + this.sunset , sunRadius, 0, 2* Math.PI);
+    this.visualCtx.fillStyle = 'yellow';
+    this.visualCtx.fill();
 
     this.visualCtx.fillStyle = 'rgb(0,0,0)';
     this.visualCtx.fillRect(0, this.canvas.height / 2, this.canvas.width, this.canvas.height / 2);
 
-    this.topBars(dataArray)
     this.bottomBars(dataArray);
     this.oscilloscope();
     this.drawOrbs(dataArray);
+
+    this.sunset += .1;
   }
 }
 

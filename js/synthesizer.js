@@ -58,7 +58,7 @@ class Synthesizer {
 
   startSynth() {
     this.osc = this.audCtx.createOscillator();
-    this.osc.type = 'sawtooth'
+    this.osc.type = 'square'
     this.osc.frequency.value = this.yPos;
     this.osc.connect(this.filterNode);
     this.filterNode.connect(this.gainNode);

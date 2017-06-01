@@ -1,9 +1,13 @@
-
+body, html, h1, div, canvas {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
 
 #synth {
   display: fixed;
   top: 0px;
   left: 0px;
-  margin: 0px;
-  border: 1px solid black;
+  height: 100%;
+  width: 100%;
 }
