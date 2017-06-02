@@ -6,7 +6,7 @@ class Visualizer {
     this.visualCtx = this.canvas.getContext('2d');
     this.loopAnalyser = analyser;
     this.orbs = [];
-    this.sunset = this.canvas.height / 4;
+    this.sunset = this.canvas.height / 20;
   }
 
   createOrb() {

@@ -3,14 +3,31 @@
   <head>
     <meta charset="utf-8">
     <title>JavaSynth</title>
+    <link href="https://fonts.googleapis.com/css?family=Megrim" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script type="text/javascript" src="./js/bundle.js"></script>
     <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
   </head>
-  <body>
+  <body id="body">
+    <div class="content">
+      <h1>sunset synth</h1>
+      <div class="buttons">
+        <img id="sine" class="active" src="/icons/sine.png" />
+
+        <img id="triangle" src="/icons/triangle.png" />
+
+        <img id="sawtooth" src="/icons/sawtooth.png" />
+
+        <img id="square" src="/icons/square.png" />
+
+        <img id="record" src="/icons/record.png" style="visibility: hidden;" />
+
+        <img id="loop" src="/icons/loop.png" />
+      </div>
+    </div>
     <canvas id="synth" oncontextmenu="return false;">
       oops, it seems that your browser can't support this synthesizer
+      <audio src="/seagulls.mp3" autoplay loop />
     </canvas>
-
   </body>
 </html>

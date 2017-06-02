@@ -5,6 +5,12 @@ const Visualizer = require("./visualizer")
 class Looper {
   constructor(canvas) {
     this.canvas = canvas;
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+      this.canvas.width = window.innerWidth;
+      this.canvas.height = window.innerHeight;
+    })
     this.loopCtx = new AudioContext();
     this.analyser = this.loopCtx.createAnalyser();
     this.analyser.fftsize = 256;
@@ -12,9 +18,11 @@ class Looper {
 
     this.visualizer = new Visualizer(this.canvas, this.analyser);
     this.canvas.addEventListener('mousedown', this.handleDown.bind(this));
-    this.canvas.addEventListener('mouseup', this.handleLeave.bind(this));
-    this.canvas.addEventListener('mouseleave', this.handleLeave.bind(this));
+    document.getElementById('body').addEventListener('mouseup', this.handleLeave.bind(this));
+    document.getElementById('body').addEventListener('mouseleave', this.handleLeave.bind(this));
     this.setup();
+    this.recording = false;
+    this.looping = false;
     this.count = 0;
     this.loops = [];
     setInterval(this.clock.bind(this), 50);
@@ -22,16 +30,48 @@ class Looper {
 
   handleLeave(e) {
     if (this.rec.state === 'recording') {
-      this.stopRecord()
+      this.stopRecord();
+    } else if (this.synth.playing) {
+      this.synth.stopSynth();
     }
   }
 
   handleDown(e) {
     if (e.button === 0) {
-      this.startRecord()
+      if (this.recording) {
+        this.startRecord()
+      } else {
+        this.synth.startSynth();
+      }
     } else if (e.button === 2){
       this.loops.pop(1);
       this.visualizer.orbs.pop(1);
+    }
+  }
+
+  toggleLoop(e) {
+    if (this.looping) {
+      this.looping = false;
+      this.synth.looping = false;
+      document.getElementById('loop').src="/icons/loop.png";
+      document.getElementById('record').style.visibility="hidden";
+    } else if (!this.looping) {
+      this.looping = true;
+      this.synth.looping = true;
+      document.getElementById('loop').src="/icons/pause.png";
+      document.getElementById('record').style.visibility="visible";
+    }
+  }
+
+  toggleRecord(e) {
+    if (this.looping && this.recording) {
+      this.recording = false;
+      this.synth.recording = false;
+      document.getElementById('record').src="/icons/record.png"
+    } else if (!this.looping || !this.recording){
+      this.recording = true;
+      this.synth.recording = true;
+      document.getElementById('record').src="/icons/recording.png"
     }
   }
 
@@ -75,7 +115,6 @@ class Looper {
   }
 
   stopRecord(e) {
-    this.recording = false
     this.synth.stopSynth()
     setTimeout(() => {
       if (this.rec.state === 'recording') {
@@ -98,12 +137,10 @@ class Looper {
     } else {
       this.count = 0;
     }
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    this.canvas.width = width;
-    this.canvas.height = height;
 
-    this.playLoops(this.count)
+    if (this.looping) {
+      this.playLoops(this.count)
+    }
     this.visualizer.draw();
   }
 }
@@ -112,6 +149,12 @@ class Looper {
 const init = () => {
   const synth = document.getElementById('synth');
   const looper = new Looper(synth);
+  document.getElementById('sine').addEventListener('click', looper.synth.changeWave.bind(looper.synth));
+  document.getElementById('sawtooth').addEventListener('click', looper.synth.changeWave.bind(looper.synth));
+  document.getElementById('square').addEventListener('click', looper.synth.changeWave.bind(looper.synth));
+  document.getElementById('triangle').addEventListener('click', looper.synth.changeWave.bind(looper.synth));
+  document.getElementById('record').addEventListener('click', looper.toggleRecord.bind(looper));
+  document.getElementById('loop').addEventListener('click', looper.toggleLoop.bind(looper));
 }
 
 

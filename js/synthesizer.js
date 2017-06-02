@@ -6,9 +6,12 @@ class Synthesizer {
     this.analyser = analyser;
     this.setupGain();
     this.setupNodes();
-    this.canvas.addEventListener('mousemove', this.trackMouse.bind(this));
+    document.getElementById('body').addEventListener('mousemove', this.trackMouse.bind(this));
     this.osc = this.audCtx.createOscillator();
+    this.wave = 'sine'
     this.playing = false;
+    this.recording = false;
+    this.looping = false;
   }
 
   setupGain() {
@@ -19,7 +22,13 @@ class Synthesizer {
   setupNodes() {
     this.filterNode = this.audCtx.createBiquadFilter();
     this.filterNode.type = 'lowpass';
-    this.filterNode.Q.value = 25;
+    this.filterNode.Q.value = 5;
+  }
+
+  changeWave(e) {
+    document.getElementById(this.wave).classList.remove('active');
+    this.wave = e.currentTarget.id;
+    e.currentTarget.classList.add('active');
   }
 
   trackMouse(e) {
@@ -33,20 +42,20 @@ class Synthesizer {
 
   updateY() {
     const PITCHES  = [110,
-                      130.81,
-                      146.83,
-                      164.81,
+                      131,
+                      147,
+                      165,
                       196,
                       220,
-                      261.63,
-                      293.66,
-                      329.63,
+                      262,
+                      294,
+                      330,
                       392,
                       440,
-                      523.25,
-                      587.33,
-                      659.25,
-                      783.99,
+                      523,
+                      587,
+                      659,
+                      784,
                       880];
     let step = Math.floor(((this.yPos / this.canvas.height) * PITCHES.length) - 2);
     this.osc.frequency.value = PITCHES[step];
@@ -58,13 +67,15 @@ class Synthesizer {
 
   startSynth() {
     this.osc = this.audCtx.createOscillator();
-    this.osc.type = 'square'
+    this.osc.type = this.wave
     this.osc.frequency.value = this.yPos;
     this.osc.connect(this.filterNode);
     this.filterNode.connect(this.gainNode);
     this.gainNode.connect(this.analyser);
-    this.gainNode.connect(this.looperDest);
-    this.gainNode.gain.linearRampToValueAtTime(0.5, this.audCtx.currentTime + 0.1);
+    if (this.looping && this.recording) {
+      this.gainNode.connect(this.looperDest);
+    }
+    this.gainNode.gain.linearRampToValueAtTime(0.25, this.audCtx.currentTime + 0.1);
     this.playing = true;
     this.osc.start();
   }
