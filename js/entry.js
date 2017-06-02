@@ -12,6 +12,7 @@ class Looper {
       this.canvas.height = window.innerHeight;
     })
     this.loopCtx = new AudioContext();
+
     this.analyser = this.loopCtx.createAnalyser();
     this.analyser.fftsize = 256;
     this.analyser.connect(this.loopCtx.destination);
@@ -22,7 +23,7 @@ class Looper {
     document.getElementById('body').addEventListener('mouseleave', this.handleLeave.bind(this));
     this.setup();
     this.recording = false;
-    this.looping = false;
+    this.looping = true;
     this.count = 0;
     this.loops = [];
     setInterval(this.clock.bind(this), 50);
@@ -55,10 +56,12 @@ class Looper {
       this.synth.looping = false;
       document.getElementById('loop').src="/icons/loop.png";
       document.getElementById('record').style.visibility="hidden";
+      document.getElementById('loop').classList.remove('looping');
     } else if (!this.looping) {
       this.looping = true;
       this.synth.looping = true;
       document.getElementById('loop').src="/icons/pause.png";
+      document.getElementById('loop').classList.add('looping');
       document.getElementById('record').style.visibility="visible";
     }
   }
@@ -68,7 +71,7 @@ class Looper {
       this.recording = false;
       this.synth.recording = false;
       document.getElementById('record').src="/icons/record.png"
-    } else if (!this.looping || !this.recording){
+    } else if (!this.recording){
       this.recording = true;
       this.synth.recording = true;
       document.getElementById('record').src="/icons/recording.png"
@@ -149,6 +152,16 @@ class Looper {
 const init = () => {
   const synth = document.getElementById('synth');
   const looper = new Looper(synth);
+
+  document.getElementById('splash').addEventListener('click', (e) => {
+    e.currentTarget.classList.add('hidden');
+    setTimeout(() => document.getElementById('body').removeChild(document.getElementById('splash')), 2000)
+  });
+
+  document.getElementById('header').addEventListener('click', () => {
+
+  })
+
   document.getElementById('sine').addEventListener('click', looper.synth.changeWave.bind(looper.synth));
   document.getElementById('sawtooth').addEventListener('click', looper.synth.changeWave.bind(looper.synth));
   document.getElementById('square').addEventListener('click', looper.synth.changeWave.bind(looper.synth));

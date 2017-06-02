@@ -5,6 +5,40 @@ body, html, h1, div, canvas {
   user-select: none;
 }
 
+@keyframes fade-in {
+  0% {opacity: 0;}
+  100% {opacity: 1;}
+}
+
+#splash {
+  background-color: rgba( 0, 0, 50, .7);
+  height: 100vh;
+  width: 100vw;
+
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  transition: 3s;
+}
+
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(0,0,50,.8);
+  padding: 70px;
+  border-radius: 15px;
+  margin: auto;
+  animation-name: fade-in;
+  animation-duration: 5s;
+}
+
+.hidden {
+  opacity: 0;
+  z-index: -2;
+}
 
 
 #synth {
@@ -13,6 +47,8 @@ body, html, h1, div, canvas {
   left: 0px;
   height: 100%;
   width: 100%;
+  animation-name: fade-in;
+  animation-duration: 15s;
 }
 
 body {
@@ -33,13 +69,43 @@ h1 {
   font-family: 'Megrim', cursive;
 }
 
+p {
+  color: white;
+  font-family: 'Raleway', sans-serif;
+}
+
 .buttons {
   position:relative;
   z-index: 1;
   height: 10vh;
   min-height: 70px;
   display: flex;
+  justify-content: space-between;
+}
+
+.waves {
+  display: flex;
   justify-content: space-around;
+  width: 75vw;
+}
+
+.loop-controls {
+  display: flex;
+  justify-content: space-around;
+  width: 20vw;
+}
+
+@keyframes looping {
+  0% {transform: rotate(0deg);}
+  100% {transform: rotate(360deg);}
+}
+
+.looping {
+  opacity: 1;
+  animation-name: looping;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 .active {
@@ -47,10 +113,13 @@ h1 {
 }
 
 img {
-  height: 100%;
+  height: 25px;
   opacity: 0.2;
+  transition: .7s;
 }
 
 img:hover {
   opacity: 1;
+  transition: .12s;
+  cursor: pointer;
 }

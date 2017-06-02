@@ -3,26 +3,38 @@
   <head>
     <meta charset="utf-8">
     <title>JavaSynth</title>
-    <link href="https://fonts.googleapis.com/css?family=Megrim" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Megrim|Raleway" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css" />
     <script type="text/javascript" src="./js/bundle.js"></script>
     <script src="https://code.createjs.com/easeljs-0.8.2.min.js"></script>
   </head>
   <body id="body">
-    <div class="content">
+    <div id="splash">
+      <div class="splash-content">
       <h1>sunset synth</h1>
+      <p>click and drag to play the synth</p>
+      <p>change the wave form for different sounds</p>
+      <p>enable looping and press record to start looping</p>
+      <p>right click to delete your last loop</p>
+      </div>
+    </div>
+    <div class="content">
+      <h1 id="header" >sunset synth</h1>
       <div class="buttons">
-        <img id="sine" class="active" src="/icons/sine.png" />
+        <div class="waves">
+          <img id="sine" class="active" src="/icons/sine.png" />
 
-        <img id="triangle" src="/icons/triangle.png" />
+          <img id="triangle" src="/icons/triangle.png" />
 
-        <img id="sawtooth" src="/icons/sawtooth.png" />
+          <img id="sawtooth" src="/icons/sawtooth.png" />
 
-        <img id="square" src="/icons/square.png" />
+          <img id="square" src="/icons/square.png" />
+        </div>
+        <div class='loop-controls'>
+          <img id="record" src="/icons/record.png" />
 
-        <img id="record" src="/icons/record.png" style="visibility: hidden;" />
-
-        <img id="loop" src="/icons/loop.png" />
+          <img id="loop" src="/icons/pause.png" class="looping" />
+        </div>
       </div>
     </div>
     <canvas id="synth" oncontextmenu="return false;">

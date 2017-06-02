@@ -11,7 +11,7 @@ class Synthesizer {
     this.wave = 'sine'
     this.playing = false;
     this.recording = false;
-    this.looping = false;
+    this.looping = true;
   }
 
   setupGain() {
