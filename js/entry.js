@@ -54,13 +54,13 @@ class Looper {
     if (this.looping) {
       this.looping = false;
       this.synth.looping = false;
-      document.getElementById('loop').src="/icons/loop.png";
+      document.getElementById('loop').src="icons/loop.png";
       document.getElementById('record').style.visibility="hidden";
       document.getElementById('loop').classList.remove('looping');
     } else if (!this.looping) {
       this.looping = true;
       this.synth.looping = true;
-      document.getElementById('loop').src="/icons/pause.png";
+      document.getElementById('loop').src="icons/pause.png";
       document.getElementById('loop').classList.add('looping');
       document.getElementById('record').style.visibility="visible";
     }
@@ -70,11 +70,11 @@ class Looper {
     if (this.looping && this.recording) {
       this.recording = false;
       this.synth.recording = false;
-      document.getElementById('record').src="/icons/record.png"
+      document.getElementById('record').src="icons/record.png"
     } else if (!this.recording){
       this.recording = true;
       this.synth.recording = true;
-      document.getElementById('record').src="/icons/recording.png"
+      document.getElementById('record').src="icons/recording.png"
     }
   }
 
