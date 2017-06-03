@@ -1,5 +1,6 @@
 # sunset synth
 
+[Live](https://rgkeith3.github.io/sunsetsynth/)
 sunset synth is an in-browser synthesizer, looper and visualizer built using the WebAudio API and HTML canvas.
 
 Everything was built using vanilla JavaScript.

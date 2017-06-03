@@ -58,6 +58,7 @@ class Synthesizer {
                       784,
                       880];
     let step = Math.floor(((this.yPos / this.canvas.height) * PITCHES.length) - 2);
+    if (step < 0) {step = 0}
     this.osc.frequency.value = PITCHES[step];
   }
 

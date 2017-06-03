@@ -96,7 +96,7 @@ class Looper {
       fileReader.onloadend = () => {
         this.loopCtx.decodeAudioData(fileReader.result)
           //it passes the buffer to the loop
-          .then(data => this.loop.buffer = data)
+          .then(data => this.loop.buffer = data, () => {})
           //which is pushed into the loops object
           .then(() => this.loops.push(this.loop))
           .then(() => this.visualizer.createOrb())
@@ -155,7 +155,12 @@ const init = () => {
 
   document.getElementById('splash').addEventListener('click', (e) => {
     e.currentTarget.classList.add('hidden');
-    setTimeout(() => document.getElementById('body').removeChild(document.getElementById('splash')), 2000)
+    setTimeout(() => {
+      let splash = document.getElementById('splash');
+      if (splash) {
+        document.getElementById('body').removeChild(splash);
+      }
+    }, 2000);
   });
 
   document.getElementById('header').addEventListener('click', () => {
