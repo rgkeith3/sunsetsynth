@@ -24,3 +24,9 @@ The WebAudio built in oscillators create the sound of the synth. The mouse moves
 The loop function was built using WebAudio and JavaScript FileReader to record the audio stream to a Blob, read it with the FileReader and then add it to an AudioBufferSourceNode. The loop is then triggered when the global clock arrives at the trigger time associated with the loop.
 
 The visualization is created using the WebAudio AnalyserNode to get usable data from the audio stream and then convert it to visuals with HTML canvas.
+
+### Future improvements
+* update looping function to better resemble that of traditional loop pedals
+* allow users to record by holding down a key, so when they find the note they want, they don't have to move down to the record button
+* always be primed for record, while looping.
+* update animations
